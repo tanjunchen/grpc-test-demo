@@ -8,6 +8,10 @@ protoc --proto_path=IMPORT_PATH1  --proto_path=IMPORT_PATH2 --cpp_out=DST_DIR --
 
 https://www.cnblogs.com/FireworksEasyCool/p/12782137.html
 
+# 测试全量生成 proto 文件
+
+protoc --go_out=plugins=grpc:. grpc-test-demo/go-grpc-proto/**/*.proto
+
 # 问题
 
 go-grpc-proto 是一个 submodule
