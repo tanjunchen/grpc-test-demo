@@ -12,6 +12,12 @@ https://www.cnblogs.com/FireworksEasyCool/p/12782137.html
 
 protoc --go_out=plugins=grpc:. grpc-test-demo/go-grpc-proto/**/*.proto
 
+protoc -I=. --proto_path=./proto/a --go_out=plugins=grpc,paths=source_relative:./proto/a x.proto
+
+protoc -I=. --proto_path=../status/status.proto --go_out=plugins=grpc,paths=/proto  prod.proto
+
+protoc -I=. --proto_path=./proto/a --go_out=plugins=grpc,paths=source_relative:./proto/a x.proto
+
 # 问题
 
 go-grpc-proto 是一个 submodule
@@ -21,4 +27,8 @@ go-grpc-proto 是一个 submodule
 1. 怎么在 go-grpc-proto/example/example.proto 中引用 go-grpc-proto/status/status.proto 中的 proto 文件
 
 1. 怎么在 go-grpc-proto/example/example.proto 中引用 google/api/http.proto 文件
+
+protoc -I=. -I=../ --proto_path=../status/status.proto --go_out=plugins=grpc,paths=source_relative:../../src/prod/  prod.proto
+
+protoc -I=.  --go_out=plugins=grpc,paths=source_relative:../../src/status status.proto
 
