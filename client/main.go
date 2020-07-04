@@ -9,7 +9,7 @@ import (
 
 const (
 	// Address gRPC服务地址
-	Address = "0.0.0.0:9999"
+	Address = "localhost:9999"
 )
 
 func main() {
