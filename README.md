@@ -107,7 +107,9 @@ success
 
 java 推荐使用 https://github.com/yidongnan/grpc-spring-boot-starter 与 grpc 服务提供者通信.
 
-## kubernetes client-go watch list 案例
+## kubernetes client-go watch list java-to-go 双向流服务案例
+
+[Go 端服务](https://github.com/tanjunchen/grpc-test-demo)
 
 进入到 `k8s-watch-list-grpc` 目录下，在 `k8s-watch-list-grpc/server/server.go` 下运行服务端，在 `k8s-watch-list-grpc/client/client.go` 下运行客户端。
 
@@ -131,3 +133,68 @@ client 日志：
 [客户端收到]: namespace:"test-watch"  syncServiceInfo:{name:"httpbin"  resourceVersion:"1462785"  creationTimeStamp:"2020-09-17 18:13:08 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}} 
 ```
 
+[Java 端服务](https://github.com/tanjunchen/grpc-test-demo)
+
+```
+返回了结果 ==> namespace: "default"
+syncServiceInfo {
+  name: "httpbin"
+  resourceVersion: "1464810"
+  creationTimeStamp: "2020-09-17 18:29:21 +0800 CST"
+  labels {
+    key: "app"
+    value: "httpbin"
+  }
+  labels {
+    key: "app_version"
+    value: "httpbin"
+  }
+  labels {
+    key: "test.io"
+    value: "true"
+  }
+  selector {
+    key: "app"
+    value: "httpbin"
+  }
+  selector {
+    key: "app_version"
+    value: "httpbin"
+  }
+  selector {
+    key: "test.io"
+    value: "true"
+  }
+}
+
+返回了结果 ==> namespace: "test-watch"
+syncServiceInfo {
+  name: "httpbin"
+  resourceVersion: "1462785"
+  creationTimeStamp: "2020-09-17 18:13:08 +0800 CST"
+  labels {
+    key: "app_version"
+    value: "httpbin"
+  }
+  labels {
+    key: "test.io"
+    value: "true"
+  }
+  labels {
+    key: "app"
+    value: "httpbin"
+  }
+  selector {
+    key: "app"
+    value: "httpbin"
+  }
+  selector {
+    key: "app_version"
+    value: "httpbin"
+  }
+  selector {
+    key: "test.io"
+    value: "true"
+  }
+}
+```
