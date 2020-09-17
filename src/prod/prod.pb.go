@@ -247,7 +247,7 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// ProductServiceClient is the client API for ProductService service.
+// ProductServiceClient is the client API for ProductService server.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ProductServiceClient interface {
@@ -271,7 +271,7 @@ func (c *productServiceClient) GetProductStock(ctx context.Context, in *ProdRequ
 	return out, nil
 }
 
-// ProductServiceServer is the server API for ProductService service.
+// ProductServiceServer is the server API for ProductService server.
 type ProductServiceServer interface {
 	GetProductStock(context.Context, *ProdRequest) (*ProdResponse, error)
 }

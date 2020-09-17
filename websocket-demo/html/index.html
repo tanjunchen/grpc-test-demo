@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket + gRPC双向数据流</title>
+    <style>
+        #chat {
+            text-align: left;
+            background: #f1f1f1;
+            width: 500px;
+            min-height: 300px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<center>
+    <h3>对话</h3>
+    <h4 id="clientId"></h4>
+    <div id="output"/>
+    <pre id="chat"></pre>
+    <input placeholder="请输入信息，回车发送" id="text" type="text">
+</center>
+<script>
+    var url = "ws://" + window.location.host + "/ws";
+    var ws = new WebSocket(url);
+
+    var chat = document.getElementById("chat");
+    var text = document.getElementById("text");
+    var output = document.getElementById("output");
+
+    var clientId = document.getElementById("clientId");
+    var name = "客户编号：" + Math.floor(Math.random() * 1000);
+    clientId.innerHTML = name;
+
+    // 打印连接状态
+    var printStatus = function(状态) {
+        var d       = document.createElement("div");
+        d.innerHTML = 状态;
+        output.appendChild(d);
+    };
+
+    // 获取当前时间
+    var now = function () {
+        var iso = new Date().toISOString();
+        return iso.split("T")[1].split(".")[0];
+    };
+
+    // 处理websocket消息
+    ws.onmessage = function (msg) {
+        var msg = JSON.parse(msg.data);
+        if (msg.input){
+            var line =  now() + " " + msg.input + "\n";
+        }
+
+        if (msg.output){
+            var line =  now() + " " + msg.output + "\n";
+        }
+
+        if(line){
+            chat.innerText += line;
+        }
+    };
+
+    // 处理连接事件
+    ws.onopen = function(evt) {
+        printStatus(now() +  ' ' + '<span style="color: green;">成功连接</span>');
+    }
+
+    // 处理断开连接事件
+    ws.onclose = function(evt) {
+        printStatus(now() +  ' ' + '<span style="color: red;">连接已关闭</span>');
+        ws = null;
+    }
+
+    // 对话框监听回车键 并发送消息
+    text.onkeydown = function (e) {
+        if (e.keyCode === 13 && text.value !== "") {
+            ws.send(JSON.stringify({"input": text.value}))
+            text.value = "";
+        }
+    };
+</script>
+</body>
+</html>

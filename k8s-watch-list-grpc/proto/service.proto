@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package k8s;
+
+option go_package = ".;k8s";
+
+message SyncServiceRequest{
+
+}
+
+message SyncServiceInfo{
+  // 服务的名称
+  string  name = 1;
+  // 资源版本号
+  string resourceVersion = 2;
+
+  // 操作
+  enum Operation {
+    ADD = 0;
+    DELETE = 1;
+    UPDATE = 2;
+  }
+  Operation operation = 3;
+
+  // 创建时间
+  string  creationTimeStamp = 4;
+
+  // service 拥有的 labels 标签
+  map<string, string> labels = 5;
+
+  // service 拥有的 selector 标签
+  map<string, string> selector = 6;
+}
+
+message SyncServiceResponse{
+  // 命名空间
+  string namespace = 1;
+
+  // service 的事件数据
+  repeated SyncServiceInfo syncServiceInfo = 2;
+}
+
+// Service 的 rpc 接口
+service ServiceService{
+  // service 服务的 list watch 事件数据接口
+  rpc SyncServiceWatchListService(stream SyncServiceRequest) returns(stream SyncServiceResponse);
+}

@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
-	"google.golang.org/grpc"
-	"grpc-test-demo/service"
-	 "grpc-test-demo/src/prod"
 	"net"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+	"grpc-test-demo/service"
+	"grpc-test-demo/src/router"
 )
 
 const (
@@ -22,12 +24,13 @@ func main() {
 	}
 
 	// 实例化 grpc Server
-	s := grpc.NewServer()
+	server := grpc.NewServer()
 
-	// 注册HelloService
-	prod.RegisterProductServiceServer(s, testService)
+	router.Init(server)
+
+	reflection.Register(server)
 
 	fmt.Println("Listen on " + Address)
 
-	s.Serve(listen)
+	server.Serve(listen)
 }

@@ -15,6 +15,8 @@ prod.proto 引用了 status/status.proto 文件, 故需要 --proto_path=../statu
 
 protoc -I=. -I=../ --proto_path=../status/status.proto --go_out=plugins=grpc,paths=source_relative:../../src/prod/  prod.proto
 
+protoc -I=. --go_out=plugins=grpc,paths=source_relative:./ service.proto
+
 在 go-grpc-proto/status 终端下执行以下语句生成 prod.pb.go 文件
 
 protoc -I=.  --go_out=plugins=grpc,paths=source_relative:../../src/status status.proto
@@ -104,3 +106,28 @@ success
 ```
 
 java 推荐使用 https://github.com/yidongnan/grpc-spring-boot-starter 与 grpc 服务提供者通信.
+
+## kubernetes client-go watch list 案例
+
+进入到 `k8s-watch-list-grpc` 目录下，在 `k8s-watch-list-grpc/server/server.go` 下运行服务端，在 `k8s-watch-list-grpc/client/client.go` 下运行客户端。
+
+server 日志：
+
+```
+========add=========
+{{{} [] [] <nil>} 0 [] default [name:"httpbin"  resourceVersion:"1464810"  creationTimeStamp:"2020-09-17 18:29:21 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}]}
+response: {{{} [] [] <nil>} 0 [] default [name:"httpbin"  resourceVersion:"1464810"  creationTimeStamp:"2020-09-17 18:29:21 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}]}
+========add=========
+========add=========
+{{{} [] [] <nil>} 0 [] test-watch [name:"httpbin"  resourceVersion:"1462785"  creationTimeStamp:"2020-09-17 18:13:08 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}]}
+response: {{{} [] [] <nil>} 0 [] test-watch [name:"httpbin"  resourceVersion:"1462785"  creationTimeStamp:"2020-09-17 18:13:08 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}]}
+========add=========
+```
+
+client 日志：
+
+```
+[客户端收到]: namespace:"default"  syncServiceInfo:{name:"httpbin"  resourceVersion:"1464810"  creationTimeStamp:"2020-09-17 18:29:21 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}} 
+[客户端收到]: namespace:"test-watch"  syncServiceInfo:{name:"httpbin"  resourceVersion:"1462785"  creationTimeStamp:"2020-09-17 18:13:08 +0800 CST"  labels:{key:"app"  value:"httpbin"}  labels:{key:"app_version"  value:"httpbin"}  labels:{key:"test.io"  value:"true"}  selector:{key:"app"  value:"httpbin"}  selector:{key:"app_version"  value:"httpbin"}  selector:{key:"test.io"  value:"true"}} 
+```
+
